@@ -1,7 +1,7 @@
 <?php
 /*
- * Author: Louie Zhu
- * Date: Mar 6, 2016
+ * Author: Group 15
+ * Date: April 17, 2017
  * Name: search.class.php
  * Description: this script defines the SearchAccount class. The class contains a method named display, which
  *     accepts an array of Account objects and displays them in a grid.
@@ -37,6 +37,7 @@ class AccountSearch extends AccountIndexView {
                     $client_id = $account->getClient_id();
                     $account_number = $account->getAccount_number();
                     $balance = $account->getBalance();
+                    $routing_number = $account->getRouting_number();
                     $account_type = $account->getAccount_type();
                     //$image = $account->getImage();
                     //if (strpos($image, "http://") === false AND strpos($image, "https://") === false) {
@@ -53,7 +54,7 @@ class AccountSearch extends AccountIndexView {
                     }
 
                     echo "<div class='col'><p><a href='" . BASE_URL . "/account/detail/$id'><img src='" .
-                    "'></a><span>ID: $client_id<br>Account Number: $account_number<br>Balance: $$balance <br>Account Type: $account_type" . "</span></p></div>";
+                    "'></a><span>ID: $client_id<br>Account Number: $account_number<br>Balance: $$balance <br>Routing Number: $routing_number<br>Account Type: $account_type" . "</span></p></div>";
                     ?>
                     <?php
                     if ($i % 6 == 5 || $i == count($accounts) - 1) {

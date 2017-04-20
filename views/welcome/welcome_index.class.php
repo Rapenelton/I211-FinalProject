@@ -1,7 +1,7 @@
 <?php
 /*
- * Author: Louie Zhu
- * Date: Mar 6, 2016
+ * Author: Group 15
+ * Date: April 10, 2017
  * Name: index.class.php
  * Description: This class defines the method "display" that displays the home page.
  */

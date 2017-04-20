@@ -56,7 +56,7 @@ class AccountIndex extends AccountIndexView {
                     } else {
                         $account_type = "Savings";
                     }
-                    echo "<div class='col'><p><a href='", BASE_URL, "/accounts/detail/$id'></a><span>ID: " . $id . "<br>Client ID: $client_id   <br>Balance: $balance  <br>Account Number: " . $account_number . "<br>Account Type: " . $account_type . "</span></p></div>";
+                    echo "<div class='col'><p><a href='", BASE_URL, "/accounts/detail/$id'></a><span>ID: " . $id . "<br>Client ID: $client_id   <br>Balance: $$balance  <br>Routing Number: $routing_number<br>Account Number: " . $account_number . "<br>Account Type: " . $account_type . "</span></p></div>";
                     ?>
                     <?php
                     if ($i % 6 == 5 || $i == count($accounts) - 1) {

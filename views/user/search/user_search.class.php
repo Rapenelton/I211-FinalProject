@@ -1,7 +1,7 @@
 <?php
 /*
- * Author: Louie Zhu
- * Date: Mar 6, 2016
+ * Author: Group 15
+ * Date: April 17, 2017
  * Name: search.class.php
  * Description: this script defines the SearchUser class. The class contains a method named display, which
  *     accepts an array of User objects and displays them in a grid.
