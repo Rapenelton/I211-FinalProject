@@ -27,7 +27,7 @@ class AccountIndex extends AccountIndexView {
 
         <div id="searchbar">
             <form method="get" action="<?= BASE_URL ?>/account/search/">
-                <input type="text" name="query-terms" id="searchtextbox" placeholder="Search account by name" autocomplete="off">
+                <input type="text" name="query-terms" id="searchtextbox" placeholder="Search by account #" autocomplete="off">
                 <input type="submit" value="Go"/>
             </form>
 
@@ -51,7 +51,12 @@ class AccountIndex extends AccountIndexView {
                         echo "<div class='row'>";
                     }
 
-                    echo "<div class='col'><p><a href='", BASE_URL, "/accounts/detail/$id'></a><span>ID: " . $id . "<br>$client_id " . $balance . "<br>Account Number: " . $account_number . "<br>Account Type: " . $account_type . "</span></p></div>";
+                    if ($account_type == 1) {
+                        $account_type = "Checkings";
+                    } else {
+                        $account_type = "Savings";
+                    }
+                    echo "<div class='col'><p><a href='", BASE_URL, "/accounts/detail/$id'></a><span>ID: " . $id . "<br>Client ID: $client_id   <br>Balance: $balance  <br>Account Number: " . $account_number . "<br>Account Type: " . $account_type . "</span></p></div>";
                     ?>
                     <?php
                     if ($i % 6 == 5 || $i == count($accounts) - 1) {
@@ -61,7 +66,7 @@ class AccountIndex extends AccountIndexView {
             }
             ?>  
 
-            <a href="../../../index/">Back to Home</a>
+            <a href="../../index/">Back to Home</a>
 
         </div>
 

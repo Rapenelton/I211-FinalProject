@@ -10,7 +10,7 @@ class WelcomeIndex extends IndexView {
 
     public function display() {
         //display page header
-        parent::displayHeader("Insert Generic Bank Name Here");
+        parent::displayHeader("Cash Money Bank");
         ?>    
 
         <html>

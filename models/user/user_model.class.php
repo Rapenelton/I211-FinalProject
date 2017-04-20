@@ -175,13 +175,13 @@ class UserModel {
         $SSN = $this->dbConnection->real_escape_string(filter_input(INPUT_POST, 'SSN', FILTER_SANITIZE_STRING));
         $email = $this->dbConnection->real_escape_string(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
 
-
-        echo "<br>firstName: " . $first_name;
-        echo "<br>lastName: " . $last_name;
-        echo "<br>DOB: " . $birth_date;
-        echo "<br>SSN: " . $SSN;
-        echo "<br>Email: " . $email;
-
+        /*
+          echo "<br>firstName: " . $first_name;
+          echo "<br>lastName: " . $last_name;
+          echo "<br>DOB: " . $birth_date;
+          echo "<br>SSN: " . $SSN;
+          echo "<br>Email: " . $email;
+         */
 
         // assuming '2' is considered a normal 'user' account.
         $role = 2;

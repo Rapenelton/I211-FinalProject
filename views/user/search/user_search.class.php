@@ -39,6 +39,7 @@ class UserSearch extends UserIndexView {
                     $ssn = $user->getSsn();
                     $email = $user->getEmail();
                     $birth_date = new \DateTime($user->getBirth_date());
+                    $birth_date = $birth_date->format('m-d-Y');
                     
                     //$image = $user->getImage();
                     //if (strpos($image, "http://") === false AND strpos($image, "https://") === false) {
@@ -51,7 +52,7 @@ class UserSearch extends UserIndexView {
                     }
 
                     echo "<div class='col'><p><a href='" . BASE_URL . "/user/detail/$client_id'><img src='" .
-                    "'></a><span>ID: $client_id<br>Name: $first_name ' ' $last_name<br>SSN: $ssn <br>Email: $email" . "</span></p></div>";
+                    "'></a><span>ID: $client_id<br>Name: $first_name  $last_name<br>SSN: $ssn <br>Birth Date: $birth_date <br>Email: $email" . "</span></p></div>";
                     ?>
                     <?php
                     if ($i % 6 == 5 || $i == count($users) - 1) {
