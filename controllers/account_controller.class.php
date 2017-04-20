@@ -40,7 +40,7 @@ class AccountController {
     public function detail($id) {
         //retrieve the specific account
         $account = $this->account_model->view_account($id);
-        
+
         if (!$account) {
             //display an error
             $message = "There was a problem displaying the account id='" . $id . "'.";
@@ -59,10 +59,10 @@ class AccountController {
         $query_terms = trim($_GET['query-terms']);
 
         //if search term is empty, list all accounts
-        if ($query_terms == "") {
-            $this->index();
-        }
-
+        /* if ($query_terms == "") {
+          $this->index();
+          }
+         */
         //search the database for matching accounts
         $accounts = $this->account_model->search_account($query_terms);
 
@@ -112,12 +112,10 @@ class AccountController {
         $this->error($message);
         return;
     }
-    
 
     public function login() {
         $login = new AccountLogin();
         $login->display();
     }
-     
-}
 
+}

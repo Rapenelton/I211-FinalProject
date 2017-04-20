@@ -40,7 +40,7 @@ class UserController {
     public function detail($id) {
         //retrieve the specific user
         $user = $this->user_model->view_user($id);
-        
+
         if (!$user) {
             //display an error
             $message = "There was a problem displaying the user id='" . $id . "'.";
@@ -58,11 +58,13 @@ class UserController {
         //retrieve query terms from search form
         $query_terms = trim($_GET['query-terms']);
 
-        //if search term is empty, list all users
-        if ($query_terms == "") {
-            $this->index();
-        }
+        /*
+          //if search term is empty, list all users
+          if ($query_terms == "") {
+          $this->index();
+          }
 
+         */
         //search the database for matching users
         $users = $this->user_model->search_user($query_terms);
 
@@ -112,25 +114,23 @@ class UserController {
         $this->error($message);
         return;
     }
-    
+
     // displays the user registration page
-    public function register()  {
+    public function register() {
         $register = new UserRegister();
         $register->display();
     }
-    
+
     public function login() {
         $login = new UserLogin();
         $login->display();
     }
-    
+
     public function addUser() {
-        
+
         $this->user_model->add_user();
         $added = new UserAdd();
         $added->display();
-        
     }
-     
-}
 
+}

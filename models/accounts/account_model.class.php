@@ -76,7 +76,7 @@ class AccountModel {
         while ($obj = $query->fetch_object()) {
             $account = new Account(stripslashes($obj->id), stripslashes($obj->client_id), stripslashes($obj->account_number), stripslashes($obj->balance), stripslashes($obj->routing_number), stripslashes($obj->account_type));
             //set the id for the account
-            $account->setID($obj->client_id);
+            $account->setID($obj->id);
 
             //add the account into the array
             $accounts[] = $account;

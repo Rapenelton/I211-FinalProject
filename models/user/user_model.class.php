@@ -112,17 +112,20 @@ class UserModel {
 
     //search the database for users that match words in titles. Return an array of users if succeed; false otherwise.
     public function search_user($terms) {
-        $terms = explode(" ", $terms); //explode multiple terms into an array
-        //select statement for AND serach
-        $sql = "SELECT * FROM " . $this->tblUsers .
-                " WHERE " . $this->tblUsers . ".client_id AND (1";
+        if ($terms == NULL) {
+            $sql = "SELECT * FROM " . $this->tblUsers;
+        } else {
+            $terms = explode(" ", $terms); //explode multiple terms into an array
+            //select statement for AND serach
+            $sql = "SELECT * FROM " . $this->tblUsers .
+                    " WHERE " . $this->tblUsers . ".client_id AND (1";
 
-        foreach ($terms as $term) {
-            $sql .= " AND first_name LIKE '%" . $term . "%'";
+            foreach ($terms as $term) {
+                $sql .= " AND first_name LIKE '%" . $term . "%'";
+            }
+
+            $sql .= ")";
         }
-
-        $sql .= ")";
-
         //execute the query
         $query = $this->dbConnection->query($sql);
 
@@ -150,7 +153,8 @@ class UserModel {
         return $users;
     }
 
-    public function add_user() {
+    public
+            function add_user() {
 
         if (!filter_has_var(INPUT_POST, 'firstName') ||
                 !filter_has_var(INPUT_POST, 'lastName') ||
@@ -171,13 +175,13 @@ class UserModel {
         $SSN = $this->dbConnection->real_escape_string(filter_input(INPUT_POST, 'SSN', FILTER_SANITIZE_STRING));
         $email = $this->dbConnection->real_escape_string(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
 
-        
-          echo "<br>firstName: " . $first_name;
-          echo "<br>lastName: " . $last_name;
-          echo "<br>DOB: " . $birth_date;
-          echo "<br>SSN: " . $SSN;
-          echo "<br>Email: " . $email;
-         
+
+        echo "<br>firstName: " . $first_name;
+        echo "<br>lastName: " . $last_name;
+        echo "<br>DOB: " . $birth_date;
+        echo "<br>SSN: " . $SSN;
+        echo "<br>Email: " . $email;
+
 
         // assuming '2' is considered a normal 'user' account.
         $role = 2;
@@ -197,3 +201,5 @@ class UserModel {
 }
 
 // end class
+
+    
