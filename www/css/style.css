@@ -1,0 +1,52 @@
+.buttons {
+    display: flex;
+    width: 60%;
+    margin: auto;
+    justify-content: space-between;
+}
+
+.buttons a:hover {
+    border-bottom: thin dashed #fff;
+    color: red;
+}
+
+
+/* style for the search bar */
+#searchbar {
+    float: right;
+    margin-top: 10px;
+    margin-right: 0px;
+    position: relative;
+    border: #bbb 1px solid;
+    border-radius: 0px;
+
+}
+
+#searchbar input{
+    border: none;
+}
+
+#searchbar input[type="text"] {
+    width: 155px;
+    padding-left: 8px;
+    font-size: 0.8em;
+    color: #444;
+}
+
+#searchbar input[type="text"]:focus {
+    outline: none;
+}
+
+#searchbar input[type="submit"]{
+    border-left: 1px solid #fff;
+    padding: 0;
+    width: 24px;
+    height: 19px;
+    text-align: center;
+    background-color: #eee;
+}
+
+#searchbar input[type="submit"]:hover{
+    border-left: 1px solid #999;
+    background-color: #c7f2fd;
+}
