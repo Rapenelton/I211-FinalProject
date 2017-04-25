@@ -22,6 +22,7 @@ class UserLoginSuccess extends UserIndexView {
     <p><a href="../index/">Back to Home</a></p>
         
     <?php    
+    parent::displayFooter();
     }// end display
     
 }

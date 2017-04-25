@@ -36,14 +36,16 @@ class UserRegister extends UserIndexView {
             <br>
             <button type="submit" >Register</button>
         </form>
-        
+
         <br><br><br><br><br><br><br><br><br><br><br><br>
         <a href="index/">Show All Users</a>
         <a href="../index/">Home</a>
 
         <?php
-             
-        
-    }//end display
+        parent::displayFooter();
+    }
 
-}//end class
+//end display
+}
+
+//end class

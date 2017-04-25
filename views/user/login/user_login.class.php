@@ -37,6 +37,7 @@ class UserLogin extends UserIndexView {
         <a href="../index/">Home</a>
 
         <?php
+        parent::displayFooter();
     }
 
 //end display

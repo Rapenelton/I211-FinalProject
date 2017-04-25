@@ -1,72 +1,91 @@
--- phpMyAdmin SQL Dump
--- version 3.4.9
--- http://www.phpmyadmin.net
---
--- Host: mysql.iu.edu:3704
--- Generation Time: Mar 18, 2017 at 12:40 PM
--- Server version: 5.0.83
--- PHP Version: 5.2.14
-
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
 --
 -- Database: `bank`
 --
 
-DROP DATABASE `bank`;
-CREATE DATABASE `bank` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
-USE `bank`;
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `accounts`
+--
+
+CREATE TABLE `accounts` (
+  `id` smallint(6) NOT NULL,
+  `client_id` smallint(6) NOT NULL,
+  `account_number` varchar(20) NOT NULL,
+  `balance` varchar(40) NOT NULL,
+  `routing_number` varchar(40) NOT NULL,
+  `account_type` smallint(6) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `accounts`
+--
+
+INSERT INTO `accounts` (`id`, `client_id`, `account_number`, `balance`, `routing_number`, `account_type`) VALUES
+(1, 1, '22', '22000', '0', 1),
+(2, 2, '24', '24000', '0', 1),
+(3, 3, '26', '26000', '111111', 2);
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `users and accounts`
---
+-- Table structure for table `users`
 --
 
-CREATE TABLE IF NOT EXISTS `users` (
-  `client_id` smallint(6) NOT NULL auto_increment,
-  `last_name` varchar(40) default NULL,
-  `first_name` varchar(40) default NULL,
+CREATE TABLE `users` (
+  `client_id` smallint(6) NOT NULL,
+  `last_name` varchar(40) DEFAULT NULL,
+  `first_name` varchar(40) DEFAULT NULL,
   `birth_date` varchar(20) NOT NULL,
   `email` varchar(40) NOT NULL,
-  `SSN` varchar(20) default NULL,
+  `SSN` varchar(20) DEFAULT NULL,
   `role` varchar(20) NOT NULL,
-   PRIMARY KEY (`client_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=0 ;
-
-
-CREATE TABLE IF NOT EXISTS `accounts` (
-    `id` smallint(6) NOT NULL auto_increment,
-    `client_id` smallint(6) NOT NULL,
-    `account_number` varchar(20) NOT NULL UNIQUE,
-    `balance` varchar(40) NOT NULL,
-    `routing_number` varchar(40) NOT NULL,
-    `account_type` smallint(6) NOT NULL,
-    PRIMARY KEY (`id`),
-    FOREIGN KEY (`client_id`) REFERENCES users(`client_id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=0 ;
+  `username` varchar(40) NOT NULL,
+  `password` varchar(40) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `users` and table `accounts`
+-- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`last_name`, `first_name`, `birth_date`, `email`, `SSN`, `role`) VALUES
-('Penelton', 'Ryan', '1992/03/12', 'rpenelton@example.com', '123456789', '1'),
-('Kozakli', 'Hazal', '1992/05/15', 'hkozakli@example.com', '987654321', '2'),
-('Solo', 'Jaina', '4059/07/13', 'jsolo@example.com', '563491278', '2');
+INSERT INTO `users` (`client_id`, `last_name`, `first_name`, `birth_date`, `email`, `SSN`, `role`, `username`, `password`) VALUES
+(1, 'Penelton', 'Ryan', '1992/03/12', 'rpenelton@example.com', '123456789', '1', 'ryan', '12345'),
+(2, 'Kozakli', 'Hazal', '1992/05/15', 'hkozakli@example.com', '987654321', '2', 'hazal', '1345'),
+(3, 'Solo', 'Jaina', '4059/07/13', 'jsolo@example.com', '563491278', '2', 'jaina', '15654'),
+(7, 'Grounds', 'adam', '02/13/1997', 'agrounds@umail.iu.edu', '1234567', '2', 'adamdude00', 'HelloWorld!');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `accounts`
+--
+ALTER TABLE `accounts`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `account_number` (`account_number`),
+  ADD KEY `client_id` (`client_id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`client_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `accounts`
+--
+ALTER TABLE `accounts`
+  MODIFY `id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `client_id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-INSERT INTO `accounts` (`client_id`, `account_number`, `balance`, `routing_number`, `account_type`) VALUES
-('1', 22, 22000, 000000, 1),
-('2', 24, 24000, 000000, 1),
-('3', 26, 26000, 111111, 2);

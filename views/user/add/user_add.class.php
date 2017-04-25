@@ -27,6 +27,7 @@ class UserAdd extends UserIndexView {
 
 
         <?php
+        parent::displayFooter();
     }
 
 //end display
