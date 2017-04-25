@@ -2,8 +2,8 @@
  * This script contains AJAX methods
  */
 var xmlHttp;
-var numTitles = 0;  //total number of suggested albums titles
-var activeTitle = -1;  //album title currently being selected
+var numUsers = 0;  //total number of suggested users 
+var activeUser = -1;  //User currently being selected
 var searchBoxObj, suggestionBoxObj;
 
 //this function creates a XMLHttpRequest object. It should work with most types of browsers.
@@ -30,7 +30,7 @@ window.onload = function () {
 };
 
 window.onclick = function () {
-    suggestionBoxObj.style.display = 'none';
+    suggestionBoxObj.style.display = "none";
 };
 
 //set and send XMLHttp request. The parameter is the search term
@@ -43,17 +43,17 @@ function suggest(query) {
 
     //proceed only if the search term isn't empty
     // open an asynchronous request to the server.
-    xmlHttp.open("GET", base_url + "/" + media + "/suggest/" + query, true);
+    xmlHttp.open("GET", "http://localhost/I211/FinalProject/models" + type + "/suggest/" + query, true);
 
     //handle server's responses
     xmlHttp.onreadystatechange = function () {
         // proceed only if the transaction has completed and the transaction completed successfully
         if (xmlHttp.readyState === 4 && xmlHttp.status === 200) {
             // extract the JSON received from the server
-            var titles = JSON.parse(xmlHttp.responseText);
-            //console.log(titlesJSON);
-            // display suggested titles in a div block
-            displayTitles(titles);
+            var users = JSON.parse(xmlHttp.responseText);
+            //console.log(usersJSON);
+            // display suggested users in a div block
+            displayUsers(users);
         }
     };
 
@@ -62,23 +62,23 @@ function suggest(query) {
 }
 
 
-/* This function populates the suggestion box with spans containing all the titles
+/* This function populates the suggestion box with spans containing all the users
  * The parameter of the function is a JSON object
  * */
-function displayTitles(titles) {
-    numTitles = titles.length;
-    //console.log(numTitles);
-    activeTitle = -1;
-    if (numTitles === 0) {
+function displayUsers(users) {
+    numUsers = users.length;
+    //console.log(numUsers);
+    activeUser = -1;
+    if (numUsers === 0) {
         //hide all suggestions
         suggestionBoxObj.style.display = 'none';
         return false;
     }
 
     var divContent = "";
-    //retrive the titles from the JSON doc and create a new span for each title
-    for (i = 0; i < titles.length; i++) {
-        divContent += "<span id=s_" + i + " onclick='clickTitle(this)'>" + titles[i] + "</span>";
+    //retrive the users from the JSON doc and create a new span for each user
+    for (i = 0; i < users.length; i++) {
+        divContent += "<span id=s_" + i + " onclick='clickUser(this)'>" + users[i] + "</span>";
     }
     //display the spans in the div block
     suggestionBoxObj.innerHTML = divContent;
@@ -99,36 +99,36 @@ function handleKeyUp(e) {
     }
 
     //if the up arrow key is pressed
-    if (e.keyCode === 38 && activeTitle > 0) {
+    if (e.keyCode === 38 && activeUser > 0) {
         //add code here to handle up arrow key. e.g. select the previous item
-        activeTitleObj.style.backgroundColor = "#FFF";
-        activeTitle--;
-        activeTitleObj = document.getElementById("s_" + activeTitle);
-        activeTitleObj.style.backgroundColor = "#F5DEB3";
-        searchBoxObj.value = activeTitleObj.innerHTML;
+        activeUserObj.style.backgroundColor = "#FFF";
+        activeUser--;
+        activeUserObj = document.getElementById("s_" + activeUser);
+        activeUserObj.style.backgroundColor = "#F5DEB3";
+        searchBoxObj.value = activeUserObj.innerHTML;
         return;
     }
 
     //if the down arrow key is pressed
-    if (e.keyCode === 40 && activeTitle < numTitles - 1) {
+    if (e.keyCode === 40 && activeUser < numUsers - 1) {
         //add code here to handle down arrow key, e.g. select the next item 
         
-        if(typeof(activeTitleObj) != "undefined") {
-            activeTitleObj.style.backgroundColor = "#FFF";
+        if(typeof(activeUserObj) != "undefined") {
+            activeUserObj.style.backgroundColor = "#FFF";
         }
-        activeTitle++;
-        activeTitleObj = document.getElementById("s_" + activeTitle);
-        activeTitleObj.style.backgroundColor = "#F5DEB3";
-        searchBoxObj.value = activeTitleObj.innerHTML;
+        activeUser++;
+        activeUserObj = document.getElementById("s_" + activeUser);
+        activeUserObj.style.backgroundColor = "#F5DEB3";
+        searchBoxObj.value = activeUserObj.innerHTML;
     }
 }
 
 
 
-//when a title is clicked, fill the search box with the title and then hide the suggestion list
-function clickTitle(title) {
-    //display the title in the search box
-    searchBoxObj.value = title.innerHTML;
+//when a user is clicked, fill the search box with the user and then hide the suggestion list
+function clickUser(user) {
+    //display the user in the search box
+    searchBoxObj.value = user.innerHTML;
 
     //hide all suggestions
     suggestionBoxObj.style.display = 'none';

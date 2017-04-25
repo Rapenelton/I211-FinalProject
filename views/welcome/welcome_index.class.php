@@ -48,7 +48,7 @@ class WelcomeIndex extends IndexView {
         </html>
         <?php
         //display page footer
-        // parent::displayFooter();
+         parent::displayFooter();
     }
 
 }
