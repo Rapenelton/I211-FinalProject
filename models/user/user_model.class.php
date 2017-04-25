@@ -10,32 +10,32 @@
 
 class UserModel {
 
-    //private data members
+//private data members
     private $db;
     private $dbConnection;
     static private $_instance = NULL;
     private $tblUsers;
     private $tblAccounts;
 
-    //To use singleton pattern, this constructor is made private. To get an instance of the class, the getUserModel method must be called.
+//To use singleton pattern, this constructor is made private. To get an instance of the class, the getUserModel method must be called.
     private function __construct() {
         $this->db = Database::getDatabase();
         $this->dbConnection = $this->db->getConnection();
         $this->tblUsers = $this->db->getUsersTable();
         $this->tblAccounts = $this->db->getAccountsTable();
 
-        //Escapes special characters in a string for use in an SQL statement. This stops SQL inject in POST vars. 
+//Escapes special characters in a string for use in an SQL statement. This stops SQL inject in POST vars. 
         foreach ($_POST as $key => $value) {
             $_POST[$key] = $this->dbConnection->real_escape_string($value);
         }
 
-        //Escapes special characters in a string for use in an SQL statement. This stops SQL Injection in GET vars 
+//Escapes special characters in a string for use in an SQL statement. This stops SQL Injection in GET vars 
         foreach ($_GET as $key => $value) {
             $_GET[$key] = $this->dbConnection->real_escape_string($value);
         }
     }
 
-    //static method to ensure there is just one UserModel instance
+//static method to ensure there is just one UserModel instance
     public static function getUserModel() {
         if (self::$_instance == NULL) {
             self::$_instance = new UserModel();
@@ -57,28 +57,33 @@ class UserModel {
 
         $sql = "SELECT * FROM " . $this->tblUsers;
 
-        //execute the query
+//execute the query
         $query = $this->dbConnection->query($sql);
 
-        // if the query failed, return false. 
-        if (!$query)
-            return false;
-
-        //if the query succeeded, but no user was found.
+// if the query failed, return false. 
+        try {
+            if (!$query) {
+                throw new DatabaseException();
+            }
+        } catch (DatabaseExceptionException $e) {
+            $message = $e->getDetails();
+            echo $message;
+        }
+//if the query succeeded, but no user was found.
         if ($query->num_rows == 0)
             return 0;
 
-        //handle the result
-        //create an array to store all returned albums
+//handle the result
+//create an array to store all returned albums
         $users = array();
 
-        //loop through all rows in the returned users
+//loop through all rows in the returned users
         while ($obj = $query->fetch_object()) {
             $user = new User(stripslashes($obj->client_id), stripslashes($obj->last_name), stripslashes($obj->first_name), stripslashes($obj->birth_date), stripslashes($obj->email), stripslashes($obj->SSN), stripslashes($obj->role));
-            //set the id for the user
+//set the id for the user
             $user->setClient_id($obj->client_id);
 
-            //add the user into the array
+//add the user into the array
             $users[] = $user;
         }
         return $users;
@@ -90,18 +95,27 @@ class UserModel {
      */
 
     public function view_user($id) {
-        //the select ssql statement
+//the select ssql statement
         $sql = "SELECT * FROM " . $this->tblUsers .
                 " WHERE " . $this->tblUsers . ".id='$id'";
-        //execute the query
+//execute the query
         $query = $this->dbConnection->query($sql);
+
+        try {
+            if (!$query) {
+                throw new DatabaseException();
+            }
+        } catch (DatabaseExceptionException $e) {
+            $message = $e->getDetails();
+            echo $message;
+        }
 
         if ($query && $query->num_rows > 0) {
             $obj = $query->fetch_object();
 
-            //create an user object
+//create an user object
             $user = new User(stripslashes($obj->client_id), stripslashes($obj->last_name), stripslashes($obj->first_name), stripslashes($obj->birth_date), stripslashes($obj->email), stripslashes($obj->SSN), stripslashes($obj->role));
-            //set the id for the user
+//set the id for the user
             $user->setClient_id($obj->client_id);
 
             return $user;
@@ -110,64 +124,76 @@ class UserModel {
         return false;
     }
 
-    //search the database for users that match words in titles. Return an array of users if succeed; false otherwise.
+//search the database for users that match words in titles. Return an array of users if succeed; false otherwise.
     public function search_user($terms) {
         if ($terms == NULL) {
             $sql = "SELECT * FROM " . $this->tblUsers;
         } else {
             $terms = explode(" ", $terms); //explode multiple terms into an array
-            //select statement for AND serach
+//select statement for AND serach
             $sql = "SELECT * FROM " . $this->tblUsers .
                     " WHERE " . $this->tblUsers . ".client_id AND (1";
 
             foreach ($terms as $term) {
-                $sql .= " AND first_name LIKE '%" . $term . "%'";
+                $sql .= " AND first_name  LIKE '%" . $term . "%'";
+                $sql .= " OR last_name  LIKE '%" . $term . "%'";
+                $sql .= " OR email LIKE '%" . $term . "%'";
+                $sql .= " OR SSN LIKE '%" . $term . "%'";
+                $sql .= " OR birth_date  LIKE '%" . $term . "%'";
             }
 
             $sql .= ")";
         }
-        //execute the query
+//execute the query
         $query = $this->dbConnection->query($sql);
 
-        // the search failed, return false. 
-        if (!$query)
-            return false;
-
-        //search succeeded, but no user was found.
+// the search failed, return false. 
+        try {
+            if (!$query) {
+                throw new DatabaseException();
+            }
+        } catch (DatabaseExceptionException $e) {
+            $message = $e->getDetails();
+            echo $message;
+        }
+//search succeeded, but no user was found.
         if ($query->num_rows == 0)
             return 0;
 
-        //search succeeded, and found at least 1 user found.
-        //create an array to store all the returned users
+//search succeeded, and found at least 1 user found.
+//create an array to store all the returned users
         $users = array();
 
-        //loop through all rows in the returned users
+//loop through all rows in the returned users
         while ($obj = $query->fetch_object()) {
             $user = new User(stripslashes($obj->client_id), stripslashes($obj->last_name), stripslashes($obj->first_name), stripslashes($obj->birth_date), stripslashes($obj->email), stripslashes($obj->SSN), stripslashes($obj->role));
-            //set the id for the user
+//set the id for the user
             $user->setClient_id($obj->client_id);
 
-            //add the user into the array
+//add the user into the array
             $users[] = $user;
         }
         return $users;
     }
 
-    public
-            function add_user() {
+    public function add_user() {
 
-        if (!filter_has_var(INPUT_POST, 'firstName') ||
-                !filter_has_var(INPUT_POST, 'lastName') ||
-                !filter_has_var(INPUT_POST, 'DOB') ||
-                !filter_has_var(INPUT_POST, 'SSN') ||
-                !filter_has_var(INPUT_POST, 'email')) {
+        try {
+            if (!filter_has_var(INPUT_POST, 'firstName') ||
+                    !filter_has_var(INPUT_POST, 'lastName') ||
+                    !filter_has_var(INPUT_POST, 'DOB') ||
+                    !filter_has_var(INPUT_POST, 'SSN') ||
+                    !filter_has_var(INPUT_POST, 'email')) {
 
-            echo "No post data found!";
+                throw new DataMissingException();
+            }
+        } catch (DataMissingException $e) {
 
-            return false;
+            $message = $e->getDetails();
+            echo $message;
         }
 
-        //retrieve data for the new account; data are sanitized and escaped for security.
+//retrieve data for the new account; data are sanitized and escaped for security.
 
         $first_name = $this->dbConnection->real_escape_string(trim(filter_input(INPUT_POST, 'firstName', FILTER_SANITIZE_STRING)));
         $last_name = $this->dbConnection->real_escape_string(trim(filter_input(INPUT_POST, 'lastName', FILTER_SANITIZE_STRING)));
@@ -183,17 +209,22 @@ class UserModel {
           echo "<br>Email: " . $email;
          */
 
-        // assuming '2' is considered a normal 'user' account.
+// assuming '2' is considered a normal 'user' account.
         $role = 2;
 
-        //query string for update   
-        $sql = "INSERT INTO $this->tblUsers (last_name, first_name, birth_date, email, SSN, role) VALUES ('$last_name', '$first_name', $birth_date, '$email', $SSN, $role)";
-        // users table parameters: client_id, last_name, first_name, birth_date, email, SSN, role
+//query string for update   
+        $sql = "INSERT INTO $this->tblUsers (last_name, first_name, birth_date, email, SSN, role) VALUES ('$last_name', '$first_name', '$birth_date', '$email', '$SSN', $role)";
+// users table parameters: client_id, last_name, first_name, birth_date, email, SSN, role
 
         $query = $this->dbConnection->query($sql);
 
-        if (!$query) {
-            echo "Could not update USERS table!";
+        try {
+            if (!$query) {
+                throw new DatabaseException();
+            }
+        } catch (DatabaseExceptionException $e) {
+            $message = $e->getDetails();
+            echo $message;
             echo "<br>SQL: " . $sql;
         }
     }
@@ -202,4 +233,4 @@ class UserModel {
 
 // end class
 
-    
+

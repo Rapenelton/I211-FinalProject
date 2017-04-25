@@ -23,13 +23,13 @@ class UserIndex extends UserIndexView {
 
         <script>
         //the media type
-            var media = "account";
+            var type = "user";
         </script>
         <!--create the search bar -->
         
         <div id="searchbar">
             <form method="get" action="<?= BASE_URL ?>/user/search">
-                <input type="text" name="query-terms" id="searchtextbox" placeholder="Search by first name" autocomplete="off">
+                <input type="text" name="query-terms" id="searchtextbox" placeholder="Search by keyword" autocomplete="off" onkeyup="handleKeyUp(event)">
                 <input type="submit" value="Go"/>
             </form>
             <div id="suggestionDiv"></div>
@@ -68,7 +68,7 @@ class UserIndex extends UserIndexView {
 
         <?php
         //display page footer
-        // parent::displayFooter();
+         parent::displayFooter();
     }
 
 //end of display method

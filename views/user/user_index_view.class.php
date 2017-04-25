@@ -8,8 +8,8 @@
 
 class UserIndexView extends IndexView {
 
-    public static function displayHeader($title) {
-        parent::displayHeader($title)
+    public static function displayHeader($user) {
+        parent::displayHeader($user)
         ?>
         <script>
             //the media type

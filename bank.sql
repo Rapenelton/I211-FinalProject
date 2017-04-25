@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `first_name` varchar(40) default NULL,
   `birth_date` varchar(20) NOT NULL,
   `email` varchar(40) NOT NULL,
-  `SSN` smallint(10) default NULL,
+  `SSN` varchar(20) default NULL,
   `role` varchar(20) NOT NULL,
    PRIMARY KEY (`client_id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=0 ;
@@ -59,14 +59,14 @@ CREATE TABLE IF NOT EXISTS `accounts` (
 --
 
 INSERT INTO `users` (`last_name`, `first_name`, `birth_date`, `email`, `SSN`, `role`) VALUES
-('Penelton', 'Ryan', '03/12/1992', 'rpenelton@example.com', '123456789', '1'),
-('Kozakli', 'Hazal', '05/15/1992', 'hkozakli@example.com', '987654321', '2'),
-('Solo', 'Jaina', '07/13/4059', 'jsolo@example.com', '563491278', '2');
+('Penelton', 'Ryan', '1992/03/12', 'rpenelton@example.com', '123456789', '1'),
+('Kozakli', 'Hazal', '1992/05/15', 'hkozakli@example.com', '987654321', '2'),
+('Solo', 'Jaina', '4059/07/13', 'jsolo@example.com', '563491278', '2');
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 
 INSERT INTO `accounts` (`client_id`, `account_number`, `balance`, `routing_number`, `account_type`) VALUES
-('88', 22, 22000, 43566, 1),
-('89', 24, 24000, 95834, 1),
-('90', 26, 26000, 48473, 2);
+('1', 22, 22000, 000000, 1),
+('2', 24, 24000, 000000, 1),
+('3', 26, 26000, 111111, 2);
