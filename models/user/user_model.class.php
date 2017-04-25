@@ -1,5 +1,7 @@
 <?php
 
+session_start();
+
 /*
  * Author: Aaron White, Ryan Penelton, Adam Grounds, Raleigh Stelle V
  * Date: April 10, 2017
@@ -218,7 +220,7 @@ class UserModel {
 
 //query string for update   
         $sql = "INSERT INTO $this->tblUsers (last_name, first_name, birth_date, email, SSN, role, username, password) VALUES ('$last_name', '$first_name', '$birth_date', '$email', $SSN, $role, '$username', '$password')";
-// users table parameters: client_id, last_name, first_name, birth_date, email, SSN, role
+// users table parameters: client_id, last_name, first_name, birth_date, email, SSN, role, username, password
 
         $query = $this->dbConnection->query($sql);
 
@@ -233,6 +235,99 @@ class UserModel {
         }
     }
 
+    public function login() {
+
+        //make sure post data exists first
+        try {
+            if (!filter_has_var(INPUT_POST, 'username') ||
+                    !filter_has_var(INPUT_POST, 'password')) {
+                throw new DataMissingException();
+            }
+        } catch (DataMissingException $e) {
+
+            $message = $e->getDetails();
+            echo $message;
+        }
+
+        //get user info from the form
+        $username = $this->dbConnection->real_escape_string(trim(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING)));
+        $password = $this->dbConnection->real_escape_string(trim(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING)));
+
+        //echo "Username: " . $username . "<br>Password: " . $password;
+        
+        //select all 'usernames' that currently exist in the database
+        $sql = "SELECT username FROM $this->tblUsers";
+        
+        //echo "<br>Using table: " . $this->tblUsers;
+
+        //execute the query
+        $query = $this->dbConnection->query($sql);
+        
+        if(!$query) {
+            echo "<br>There was a problem with the database!";
+            exit();
+        }   
+        //echo "<br>Successful query!";
+
+        //create array to hold all of the usernames from the above query
+        $usernameArray = array();
+
+        //get all usernames from the database and store them in usernameArray variable
+        while ($obj = $query->fetch_object()) {
+            $usernamesInDatabase = stripslashes($obj->username);
+            $usernameArray[] = $usernamesInDatabase;
+        }
+        
+        /*echo "<br>Usernames found in the database: ";
+        for($i = 0; $i < sizeof($usernameArray); $i++)   {
+            echo "<br>" . $usernameArray[$i];
+        }*/
+
+        //check to see if username from the form exists in the database
+        if (in_array($username, $usernameArray)) {
+
+            //echo "<br>" . $username . " is in the usernames array!";
+            
+            //get the password for the account
+            $sql = "SELECT password FROM $this->tblUsers WHERE username = '$username'";
+
+            //execute the query
+            $query = $this->dbConnection->query($sql);
+            
+            if(!$query) {
+                echo "<br>failed to query passwords!";
+            }
+            
+            //will hold the password found in the database
+            $databasePasswords = array();
+
+            //get the password for the selected username
+            while ($obj = $query->fetch_object()) {
+                $databasePassword = stripslashes($obj->password);
+                $databasePasswords[] = $databasePassword;
+            }
+            
+            /*echo "<br>Matching passwords are: ";
+            for($i = 0; $i < sizeof($databasePasswords); $i++)  {
+                echo "<br>" . $databasePasswords[$i];
+            }*/
+            
+            //both the form username and password exist in the database
+            if(in_array($password, $databasePasswords)) {
+               // echo "<br>User is now logged in!";
+                $_SESSION['username'] = $username;
+                $_SESSION['isLoggedIn'] = true;
+                return true;
+            }
+            
+        }
+        //username from the form is not in the database
+        else {
+            return false;
+        }
+    }
+
+//end login
 }
 
 // end class

@@ -11,7 +11,7 @@
  *
  * @author Adam
  */
-class AccountLogin extends UserIndexView {
+class UserLogin extends UserIndexView {
 
     //put your code here
 
@@ -20,13 +20,12 @@ class AccountLogin extends UserIndexView {
         ?>
 
         <!--display a form where a user can register-->
-        <form id="register" method="post" action="">
+        <form id="register" method="post" action="checkLogin">
 
             <h3>Login</h3>
 
-            First Name: <input type="text" name="firstName"><br>
-            Last Name: <input type="text" name="LastName"><br>
-            Email: <input type="email" name="email"><br>
+            Username: <input type="text" name="username" required><br>
+            Password: <input type="text" name="password" required><br>
 
             <br>
             <button type="submit" >Login</button>

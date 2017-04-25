@@ -27,7 +27,7 @@ class WelcomeIndex extends IndexView {
 
                 <div class="buttons">
                     <a href="<?= BASE_URL ?>/user/register">Register</a>
-                    <a href="<?= BASE_URL ?>/account/login">Login</a>
+                    <a href="<?= BASE_URL ?>/user/login">Login</a>
                     <a href="account/index/">View Accounts</a>
                     <a href="user/index/">View Users</a>
                     <a href ="about.html">About</a>

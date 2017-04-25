@@ -122,8 +122,23 @@ class UserController {
     }
 
     public function login() {
-        $login = new UserLogin();
-        $login->display();
+
+        $logIn = new UserLogin();
+        $logIn->display();
+    }
+
+    public function checkLogin() {
+        //true if successful login, false otherwise
+        $loginStatus = $this->user_model->login();
+
+        if ($loginStatus) {
+            $success = new UserLoginSuccess();
+            $success->display();
+        } else {
+            $error = new UserError();
+            $message = "No such username exists in the database.";
+            $error->display($message);
+        }
     }
 
     public function addUser() {
