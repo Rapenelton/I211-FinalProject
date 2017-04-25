@@ -25,11 +25,13 @@ class UserRegister extends UserIndexView {
 
             <h3>Fill this out to register a User</h3>
 
-            First Name: <input type="text" name="firstName"><br>
-            Last Name: <input type="text" name="lastName"><br>
-            Birth date: <input type="date" name="DOB"><br>
-            Email: <input type="email" name="email"><br>
-            SSN: <input type="number" name="SSN"><br>
+            First Name: <input type="text" name="firstName" required><br>
+            Last Name: <input type="text" name="lastName" required><br>
+            Birth date: <input type="date" name="DOB" required><br>
+            Email: <input type="email" name="email" required><br>
+            SSN: <input type="number" name="SSN" required><br>
+            Username: <input type="text" name="username" required><br>
+            Password: <input type="text" name="password" required><br>
 
             <br>
             <button type="submit" >Register</button>

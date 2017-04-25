@@ -79,7 +79,7 @@ class UserModel {
 
 //loop through all rows in the returned users
         while ($obj = $query->fetch_object()) {
-            $user = new User(stripslashes($obj->client_id), stripslashes($obj->last_name), stripslashes($obj->first_name), stripslashes($obj->birth_date), stripslashes($obj->email), stripslashes($obj->SSN), stripslashes($obj->role));
+            $user = new User(stripslashes($obj->client_id), stripslashes($obj->last_name), stripslashes($obj->first_name), stripslashes($obj->birth_date), stripslashes($obj->email), stripslashes($obj->SSN), stripslashes($obj->role), stripslashes($obj->username), stripslashes($obj->password));
 //set the id for the user
             $user->setClient_id($obj->client_id);
 
@@ -183,7 +183,9 @@ class UserModel {
                     !filter_has_var(INPUT_POST, 'lastName') ||
                     !filter_has_var(INPUT_POST, 'DOB') ||
                     !filter_has_var(INPUT_POST, 'SSN') ||
-                    !filter_has_var(INPUT_POST, 'email')) {
+                    !filter_has_var(INPUT_POST, 'email') ||
+                    !filter_has_var(INPUT_POST, 'username') ||
+                    !filter_has_var(INPUT_POST, 'password')) {
 
                 throw new DataMissingException();
             }
@@ -200,6 +202,8 @@ class UserModel {
         $birth_date = $this->dbConnection->real_escape_string(filter_input(INPUT_POST, 'DOB', FILTER_DEFAULT));
         $SSN = $this->dbConnection->real_escape_string(filter_input(INPUT_POST, 'SSN', FILTER_SANITIZE_STRING));
         $email = $this->dbConnection->real_escape_string(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL));
+        $username = $this->dbConnection->real_escape_string(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING));
+        $password = $this->dbConnection->real_escape_string(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING));
 
         /*
           echo "<br>firstName: " . $first_name;
@@ -213,7 +217,7 @@ class UserModel {
         $role = 2;
 
 //query string for update   
-        $sql = "INSERT INTO $this->tblUsers (last_name, first_name, birth_date, email, SSN, role) VALUES ('$last_name', '$first_name', '$birth_date', '$email', '$SSN', $role)";
+        $sql = "INSERT INTO $this->tblUsers (last_name, first_name, birth_date, email, SSN, role, username, password) VALUES ('$last_name', '$first_name', '$birth_date', '$email', $SSN, $role, '$username', '$password')";
 // users table parameters: client_id, last_name, first_name, birth_date, email, SSN, role
 
         $query = $this->dbConnection->query($sql);
@@ -222,7 +226,7 @@ class UserModel {
             if (!$query) {
                 throw new DatabaseException();
             }
-        } catch (DatabaseExceptionException $e) {
+        } catch (DatabaseException $e) {
             $message = $e->getDetails();
             echo $message;
             echo "<br>SQL: " . $sql;

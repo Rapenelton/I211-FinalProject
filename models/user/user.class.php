@@ -13,9 +13,9 @@
  */
 class User {
 
-    private $client_id, $last_name, $first_name, $birth_date, $email, $ssn, $role;
+    private $client_id, $last_name, $first_name, $birth_date, $email, $ssn, $role, $username, $password;
     
-    public function __construct($client_id, $last_name, $first_name, $birth_date, $email, $ssn, $role) {
+    public function __construct($client_id, $last_name, $first_name, $birth_date, $email, $ssn, $role, $username, $password) {
         $this->client_id = $client_id;
         $this->last_name = $last_name;
         $this->first_name = $first_name;
@@ -23,6 +23,8 @@ class User {
         $this->email = $email;
         $this->ssn = $ssn;
         $this->role = $role;
+        $this->username = $username;
+        $this->password = $password;
     }
 
     public function getClient_id() {
@@ -56,6 +58,14 @@ class User {
     //set account id
     public function setClient_iD($client_id) {
         $this->client_id = $client_id;
+    }
+    
+    public function getUsername()   {
+        return $this->username;
+    }
+    
+    public function getPassword()   {
+        return $this->password;
     }
     
 

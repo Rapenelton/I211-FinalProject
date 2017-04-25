@@ -11,7 +11,7 @@
  *
  * @author Adam
  */
-class AccountLogin extends AccountIndexView {
+class AccountLogin extends UserIndexView {
 
     //put your code here
 

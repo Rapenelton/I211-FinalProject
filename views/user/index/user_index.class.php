@@ -48,11 +48,13 @@ class UserIndex extends UserIndexView {
                     $birth_date = new \DateTime($user->getBirth_date());
                     $email = $user->getEmail();
                     $ssn = $user->getSsn();
+                    $username = $user->getUsername();
+                    $password = $user->getPassword();
                     if ($i % 6 == 0) {
                         echo "<div class='row'>";
                     }
 
-                    echo "<div class='col'><p><a href='", BASE_URL, "/users/detail/$client_id'></a><span>ID: " . $client_id . "<br>$first_name " . $last_name . "<br>Date of Birth: " . $birth_date->format('m-d-Y') . "<br>Email: " . $email . "<br>SSN: " . $ssn . "</span></p></div>";
+                    echo "<div class='col'><p><a href='", BASE_URL, "/users/detail/$client_id'></a><span>ID: " . $client_id . "<br>$first_name " . $last_name . "<br>Date of Birth: " . $birth_date->format('m-d-Y') . "<br>Email: " . $email . "<br>SSN: " . $ssn . "<brUsername: " . $username . "<br>Password: " . $password . "</span></p></div>";
                     ?>
                     <?php
                     if ($i % 6 == 5 || $i == count($users) - 1) {
