@@ -5,11 +5,40 @@
     justify-content: space-between;
 }
 
+.buttons a {
+    background-color: whitesmoke;
+    padding: 5px;  
+    border: thin dashed #074900;  
+}
+
 .buttons a:hover {
     border-bottom: thin dashed #fff;
     color: red;
 }
 
+h2#centered {
+    text-align: center;
+}
+
+form#register   {
+
+    float: left;
+    border: 1px solid black;
+    padding-left: 5px;
+
+    width:30%;
+}
+
+div#banner {
+    background-color: #d0fcc7;
+}
+
+#footer{
+    font-size: 80%;    
+    font-family: 'Times New Roman',Times,serif;
+    text-align: center;
+    background-color: #eeeeee;  
+}
 
 /* style for the search bar */
 #searchbar {
@@ -49,4 +78,24 @@
 #searchbar input[type="submit"]:hover{
     border-left: 1px solid #999;
     background-color: #c7f2fd;
+}
+
+#wrapper {
+
+    background-color: #F4E8BC;
+    color: #330000;
+    min-height:750px;/* make sure it is at least as tall as the viewport */
+    height: 750px; /* force the BODY element to match the height of the HTML element */
+}
+
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: #ADFF2F;
+}
+
+li a {
+    display: block;
+    width: auto;
 }

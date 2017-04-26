@@ -24,14 +24,13 @@ class WelcomeIndex extends IndexView {
                 </script>
             </head>
             <body>
-
-                <div class="buttons">
-                    <a href="<?= BASE_URL ?>/user/register">Register</a>
-                    <a href="<?= BASE_URL ?>/user/login">Login</a>
-                    <a href="account/index/">View Accounts</a>
-                    <a href="user/index/">View Users</a>
-                    <a href ="about.html">About</a>
-                </div>
+                <ul>
+                    <div class="buttons">
+                        <li><a href="<?= BASE_URL ?>/user/register">Register</a></li>
+                        <li><a href="<?= BASE_URL ?>/user/login">Login</a></li>
+                        <li><a href ="about.html">About Us</a></li>
+                    </div>
+                </ul>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tellus tellus, finibus nec porta ac, mattis ac lacus. Praesent accumsan odio felis, ut consectetur odio facilisis sit amet. Suspendisse semper urna a commodo aliquet. Duis ac tortor vitae erat interdum iaculis. Donec congue vitae nisl et efficitur. Integer id justo vitae enim ultricies fermentum. Sed non arcu fringilla, imperdiet risus ut, porttitor mauris. Vivamus at elit tincidunt, vulputate odio sed, vulputate augue.</p>
                 <br>
                 <p>Suspendisse consequat maximus sem, vel malesuada dui convallis nec. Donec blandit metus nisi, ac feugiat neque viverra vel. Fusce luctus rhoncus aliquet. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed sapien lacus, tempus efficitur mi ut, porta vestibulum dolor. Nulla vel facilisis est. In purus metus, pellentesque tristique quam vel, consectetur pretium nibh.</p>
@@ -43,12 +42,11 @@ class WelcomeIndex extends IndexView {
                 <p>Aliquam vitae bibendum sapien. Etiam tincidunt leo nulla, nec laoreet velit porttitor malesuada. Pellentesque lacinia laoreet aliquam. Aenean in placerat risus, ut cursus arcu. Suspendisse ac dolor maximus diam fermentum imperdiet. Duis posuere diam ac felis viverra, euismod facilisis odio pharetra. In non vulputate est.</p>
 
 
-
             </body>
         </html>
         <?php
         //display page footer
-         parent::displayFooter();
+        parent::displayFooter();
     }
 
 }

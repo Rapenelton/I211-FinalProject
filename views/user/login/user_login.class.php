@@ -33,7 +33,7 @@ class UserLogin extends UserIndexView {
         
         <br><br><br><br><br><br><br><br><br>
         <a href="index/">Show All Accounts</a>
-        <br><br>
+        &nbsp; &nbsp;
         <a href="../index/">Home</a>
 
         <?php
