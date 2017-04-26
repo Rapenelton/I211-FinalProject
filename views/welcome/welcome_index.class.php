@@ -49,7 +49,6 @@ class WelcomeIndex extends IndexView {
                         if ($_SESSION['isLoggedIn'] == true && $_SESSION['role'] == "normal") {
                             ?>
                             <li><a href="<?= BASE_URL ?>/account/register">Register an Account</a></li>
-                            <li><a href="<?= BASE_URL ?>/account/login">Login to Account</a></li>
                             <li><a href="<?= BASE_URL ?>/account/detail/<?= $_SESSION['clientId'] ?>">View My Account</a></li>
                             <li><a href="<?= BASE_URL ?>/user/logout">Log out</a></li> 
 
