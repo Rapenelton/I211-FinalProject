@@ -6,6 +6,14 @@
  * Description: This class defines the method "display" that displays the home page.
  */
 
+session_start();
+
+// by default, no user should be logged in, also set them to be a normal user
+if (!isset($_SESSION['isLoggedIn'])) {
+    $_SESSION['isLoggedIn'] = false;
+    $_SESSION['role'] = "normal";
+}
+
 class WelcomeIndex extends IndexView {
 
     public function display() {
@@ -26,10 +34,40 @@ class WelcomeIndex extends IndexView {
             <body>
                 <ul>
                     <div class="buttons">
-                        <li><a href="<?= BASE_URL ?>/user/register">Register</a></li>
-                        <li><a href="<?= BASE_URL ?>/user/login">Login</a></li>
-                        <li><a href ="about.html">About Us</a></li>
+                        <?php
+                        // if the user is NOT logged in
+                        if ($_SESSION['isLoggedIn'] == false) {
+                            ?>
+                            <li><a href="<?= BASE_URL ?>/user/register">Register</a></li>
+                            <li><a href="<?= BASE_URL ?>/user/login">Login</a></li>
+                            <li><a href ="about.html">About Us</a></li>
+
+                            <?php
+                        }
+
+                        // if the user IS logged in and is NOT an admin
+                        if ($_SESSION['isLoggedIn'] == true && $_SESSION['role'] == "normal") {
+                            ?>
+                            <li><a href="<?= BASE_URL ?>/account/register">Register an Account</a></li>
+                            <li><a href="<?= BASE_URL ?>/account/login">Login to Account</a></li>
+                            <li><a href="<?= BASE_URL ?>/account/detail/<?= $_SESSION['clientId'] ?>">View My Account</a></li>
+                            <li><a href="<?= BASE_URL ?>/user/logout">Log out</a></li> 
+
+                        <?php }
+                        
+                        if($_SESSION['isLoggedIn'] == true && $_SESSION['role'] == "admin") {
+                            ?>
+                            
+                            <li><a href="<?= BASE_URL ?>/user/index">View All Users</a></li>
+                            <li><a href="<?= BASE_URL ?>/account/index">View All Accounts</a></li>
+                            <li><a href="<?= BASE_URL ?>/user/logout">Log out</a></li>
+                            
+                            <?php
+                        }
+                        ?>
+                        
                     </div>
+
                 </ul>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut tellus tellus, finibus nec porta ac, mattis ac lacus. Praesent accumsan odio felis, ut consectetur odio facilisis sit amet. Suspendisse semper urna a commodo aliquet. Duis ac tortor vitae erat interdum iaculis. Donec congue vitae nisl et efficitur. Integer id justo vitae enim ultricies fermentum. Sed non arcu fringilla, imperdiet risus ut, porttitor mauris. Vivamus at elit tincidunt, vulputate odio sed, vulputate augue.</p>
                 <br>

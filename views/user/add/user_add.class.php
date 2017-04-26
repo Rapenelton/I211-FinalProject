@@ -15,11 +15,11 @@ class UserAdd extends UserIndexView {
     //put your code here
 
     public function display() {
-        parent::displayHeader("Registration Successful");
+        parent::displayHeader("User Registration Successful");
         ?>
 
 
-        <h2>Thank you for registering with us!</h2>
+        <h2>Thank you for registering a User Account with us!</h2>
 
         <br>
         <a href="<?= BASE_URL ?>/index">Back to Home</a>

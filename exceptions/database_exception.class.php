@@ -11,8 +11,10 @@
  *
  * @author ryanpene
  */
-class DatabaseException {
-    
+class DatabaseException extends Exception {
+
     public function getDetails() {
         return "Fatal Error:<br> The database did not connect.";
-    }}
+    }
+
+}

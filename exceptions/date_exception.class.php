@@ -16,6 +16,6 @@
 class DateException extends Exception {
     
     public function getDetails() {
-        return "Fatal Error:<br> The date is in the wrong format.";
+        return "Fatal Error:<br> A valid date must be entered in 'mm/dd/yyyy' or 'mm-dd-yyyy' format.";
     }
 }

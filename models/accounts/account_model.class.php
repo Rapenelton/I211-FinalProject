@@ -8,6 +8,8 @@
  * 
  */
 
+session_start();
+
 class AccountModel {
 
 //private data members
@@ -95,28 +97,31 @@ class AccountModel {
      */
 
     public function view_account($id) {
-//the select ssql statement
-        $sql = "SELECT * FROM " . $this->tblAccounts .
-                " WHERE " . $this->tblAccounts . ".id='$id'";
-//execute the query
-        $query = $this->dbConnection->query($sql);
-
-
+        //the select sql statement
+        $sql = "SELECT * FROM " . $this->tblAccounts . " WHERE client_id = '$id'";
+        
         try {
+            
+        //execute the query
+        $query = $this->dbConnection->query($sql);
+            
             if (!$query) {
                 throw new DatabaseException();
             }
+            
         } catch (DatabaseExceptionException $e) {
             $message = $e->getDetails();
-            echo $message;
+            $error = new AccountError();
+            $error->display($message);
         }
 
         if ($query && $query->num_rows > 0) {
             $obj = $query->fetch_object();
 
-//create an account object
+            //create an account object
             $account = new Account(stripslashes($obj->id), stripslashes($obj->client_id), stripslashes($obj->account_number), stripslashes($obj->balance), stripslashes($obj->routing_number), stripslashes($obj->account_type));
-//set the id for the account
+            
+            //set the id for the account
             $account->setId($obj->id);
 
             return $account;
@@ -176,76 +181,84 @@ class AccountModel {
 
     public function add_account() {
 
-//if the script did not received post data, display an error message and then terminite the script immediately
+        //if the script did not received post data, display an error message and then terminite the script immediately
 
         try {
-            if (!filter_has_var(INPUT_POST, 'account_type') ||
-                    !filter_has_var(INPUT_POST, 'balance')) {
-                
+            if (!filter_has_var(INPUT_POST, 'account_type')) {
+
                 throw new DataMissingException();
             }
         } catch (DataMissingException $e) {
             $message = $e->getDetails();
-            echo $message;
+            $error = new AccountError();
+            $error->display($message);
+            exit();
         }
-//retrieve data for the new account; data are sanitized and escaped for security.
-
-        /* $first_name = $this->dbConnection->real_escape_string(trim(filter_input(INPUT_POST, 'firstName', FILTER_SANITIZE_STRING)));
-          $last_name = $this->dbConnection->real_escape_string(trim(filter_input(INPUT_POST, 'lastName', FILTER_SANITIZE_STRING)));
-          $birth_date = $this->dbConnection->real_escape_string(filter_input(INPUT_POST, 'DOB', FILTER_DEFAULT));
-          $SSN = $this->dbConnection->real_escape_string(filter_input(INPUT_POST, 'SSN', FILTER_SANITIZE_STRING));
-          $email = $this->dbConnection->real_escape_string(filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL)); */
-
-// increment id number somehow
-        $id = 1;
-
-// increment client id
-        $client_id = 1;
-
-// increment account number
-        $account_number = rand(1000, 9000);
-
+        //retrieve data for the new account; data are sanitized and escaped for security.
         $account_type = $this->dbConnection->real_escape_string(trim(filter_input(INPUT_POST, 'account_type', FILTER_SANITIZE_STRING)));
+        
+        while (TRUE)  {
+        
+        // generate a random account number; account numbers are 9 digits in length
+        $account_number = rand(000000000, 999999999);
+        
+        // see if this account number already exists in the database
+        $sql = "SELECT account_number FROM $this->tblAccounts WHERE account_number = '$account_number'";
+        
+        try {
+        
+        //execute the query
+        $query = $this->dbConnection->query($sql);
+        
+        } catch(DatabaseException $e)   {
+            $message = $e->getDetails();
+            $error = new AccountError();
+            $error->display($message);
+            exit();
+        }
+        
+        $accountNumbersArray = array();
+        
+         while ($obj = $query->fetch_object()) {
+                $databaseAccountNumbers = stripslashes($obj->account_number);
+                $accountNumbersArray[] = $databaseAccountNumbers;
+        }
+        
+        // if the account number already exists in the database
+        if(in_array($account_number, $accountNumbersArray))     {
+            // generate a new account number and try it all again
+            continue;
+        }   else    {
+            // move on with the code
+            break;
+        }
 
+        }// end while
 
-// default values for stuff
+        // default values for stuff
         $balance = 0;
-
-// value of 1 for normal user?
-        if ($account_type == 1) {
-            $account_type = "Checkings";
-        } else if ($account_type == 2) {
-            $account_type = "Savings";
-        }
-
-// increment routing number unless we need to just generate a random number for it and then
-// check the database to see if that number already exists or not.
-        if ($account_type == "Checkings") {
-            $routing_number = 000000;
-        } else if ($account_type == "Savings") {
-            $routing_number = 111111;
-        }
-
-//query string for update   
-        $sql = "INSERT INTO $this->tblAccounts (account_number, balance, routing_number, account_type) VALUES ($account_number, $balance, $routing_number, $account_type)";
-
-//id, client_id, account_number, balance, routing_number, account_type
-//"INSERT INTO books (id, title, isbn, author, publish_date, publisher, price, category_id, image, description) VALUES ($id, '$title', $isbn, '$author', '$publish_date', '$publisher', $price, $category, '$image', '$description')";
-//execute the query
-//$query = $this->dbConnection->query($sql);
+        $routing_number = 0;
+        
+        $client_id = $_SESSION['clientId'];
+        
+        //query string for update   
+        $sql = "INSERT INTO $this->tblAccounts (client_id, account_number, balance, routing_number, account_type) VALUES ($client_id, $account_number, $balance, $routing_number, '$account_type')";
+        
+        try {
+        
+        //execute the query
         $query = $this->dbConnection->query($sql);
 
-        try {
+        
             if (!$query) {
                 throw new DatabaseException();
             }
-        } catch (DatabaseExceptionException $e) {
+        } catch (DatabaseException $e) {
             $message = $e->getDetails();
-            echo $message;
-            echo "SQL: " . $sql;
+            $error = new AccountError();
+            $error->display($message);
+            exit();
         }
-
-//account_model->dbConnection->query($sql);
     }
 
 //end addAccount

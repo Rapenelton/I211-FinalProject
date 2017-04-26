@@ -16,7 +16,7 @@
 class EmailException extends Exception {
     
     public function getDetails() {
-        return "Fatal Error:<br> The email is wrong.";
+        return "Fatal Error:<br> A valid email address appears in the format of 'username@domain.domain'.";
     }
     
 }

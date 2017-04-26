@@ -38,8 +38,6 @@ class UserRegister extends UserIndexView {
         </form>
 
         <br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-        <a href="index/">Show All Users</a>
-        &nbsp; &nbsp;   
         <a href="../index/">Home</a>
 
         <?php

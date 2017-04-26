@@ -51,11 +51,6 @@ class AccountIndex extends AccountIndexView {
                         echo "<div class='row'>";
                     }
 
-                    if ($account_type == 1) {
-                        $account_type = "Checkings";
-                    } else {
-                        $account_type = "Savings";
-                    }
                     echo "<div class='col'><p><a href='", BASE_URL, "/accounts/detail/$id'></a><span>ID: " . $id . "<br>Client ID: $client_id   <br>Balance: $$balance  <br>Routing Number: $routing_number<br>Account Number: " . $account_number . "<br>Account Type: " . $account_type . "</span></p></div>";
                     ?>
                     <?php
@@ -66,7 +61,7 @@ class AccountIndex extends AccountIndexView {
             }
             ?>  
 
-            <a href="../../index/">Back to Home</a>
+            <a href="<?= BASE_URL ?>/index">Back to Home</a>
 
         </div>
 

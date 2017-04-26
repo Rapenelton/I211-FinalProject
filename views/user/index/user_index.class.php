@@ -54,7 +54,7 @@ class UserIndex extends UserIndexView {
                         echo "<div class='row'>";
                     }
 
-                    echo "<div class='col'><p><a href='", BASE_URL, "/users/detail/$client_id'></a><span>ID: " . $client_id . "<br>$first_name " . $last_name . "<br>Date of Birth: " . $birth_date->format('m-d-Y') . "<br>Email: " . $email . "<br>SSN: " . $ssn . "<brUsername: " . $username . "<br>Password: " . $password . "</span></p></div>";
+                    echo "<div class='col'><p><a href='", BASE_URL, "/users/detail/$client_id'></a><span>ID: " . $client_id . "<br>$first_name " . $last_name . "<br>Date of Birth: " . $birth_date->format('m-d-Y') . "<br>Email: " . $email . "<br>SSN: " . $ssn . "<brUsername: " . $username . "<br><br>Password: " . $password . "</span></p></div>";
                     ?>
                     <?php
                     if ($i % 6 == 5 || $i == count($users) - 1) {

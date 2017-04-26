@@ -98,6 +98,9 @@ class UserController {
 
     //handle an error
     public function error($message) {
+        
+        $message = "You shouldn't have done that..";
+        
         //create an object of the Error class
         $error = new UserError();
 
@@ -146,6 +149,13 @@ class UserController {
         $this->user_model->add_user();
         $added = new UserAdd();
         $added->display();
+    }
+    
+    public function logout()    {
+        
+        $logoutPage = new UserLogout();
+        $logoutPage->display();
+        
     }
 
 }

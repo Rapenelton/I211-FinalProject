@@ -117,5 +117,17 @@ class AccountController {
         $login = new AccountLogin();
         $login->display();
     }
-
+    
+    public function register()  {
+        $register = new AccountRegister();
+        $register->display();
+    }
+    
+    public function addAccount()    {
+        
+        $this->account_model->add_account();
+        
+        $registered = new AccountRegistered();
+        $registered->display();
+    }
 }

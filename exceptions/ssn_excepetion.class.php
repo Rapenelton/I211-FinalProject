@@ -14,6 +14,7 @@
 class SsnException extends Exception {
 
     public function getDetails() {
-        echo "Fatal Error:<br> Your Social Security Number is not the correct length. Please try again";
+        echo "Fatal Error:<br> Your Social Security Number was not the correct length. Please try again";
     }
-    }
+
+}
