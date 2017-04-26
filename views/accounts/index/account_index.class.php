@@ -67,7 +67,7 @@ class AccountIndex extends AccountIndexView {
 
         <?php
         //display page footer
-        // parent::displayFooter();
+        parent::displayFooter();
     }
 
 //end of display method
