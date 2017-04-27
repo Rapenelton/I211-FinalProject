@@ -7,7 +7,7 @@
 --
 -- Table structure for table `accounts`
 --
-
+DROP TABLE `accounts`;
 CREATE TABLE `accounts` (
   `id` smallint(6) NOT NULL,
   `client_id` smallint(6) NOT NULL,
@@ -32,7 +32,7 @@ INSERT INTO `accounts` (`id`, `client_id`, `account_number`, `balance`, `routing
 --
 -- Table structure for table `users`
 --
-
+DROP TABLE `users`;
 CREATE TABLE `users` (
   `client_id` smallint(6) NOT NULL,
   `last_name` varchar(40) DEFAULT NULL,
@@ -87,6 +87,4 @@ ALTER TABLE `accounts`
 --
 ALTER TABLE `users`
   MODIFY `client_id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+

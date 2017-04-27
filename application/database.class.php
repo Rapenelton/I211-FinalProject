@@ -38,8 +38,8 @@ class Database {
                 throw new DatabaseException($errmsg);
             }
         } catch (DatabaseException $e) {
-            $error = new Error();
-            $error->display($e->getMessage());
+            $message = $e->getDetails();
+            echo $message;
             exit;
         }
     }

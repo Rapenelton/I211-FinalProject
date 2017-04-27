@@ -89,7 +89,7 @@ class UserController {
         $titles = array();
         if ($users) {
             foreach ($users as $user) {
-                $titles[] = $user->getUser_number();
+                $titles[] = $user->getFirst_name();
             }
         }
 

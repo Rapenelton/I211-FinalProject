@@ -9,6 +9,7 @@
  */
 
 session_start();
+require_once 'application/utilities.class.php';
 
 class AccountModel {
 
@@ -97,6 +98,7 @@ class AccountModel {
      * and returns an account object. Return false if failed.
      */
 
+<<<<<<< Updated upstream
     public function view_account() {
         /* construct the sql SELECT statement in this format
          * SELECT ...
@@ -115,9 +117,23 @@ class AccountModel {
                 throw new DatabaseException();
             }
         } catch (DatabaseException $e) {
+=======
+    public function view_account($id) {
+        //the select sql statement
+        $sql = "SELECT * FROM " . $this->tblAccounts . " WHERE client_id = '$id'";
+
+        try {
+
+            //execute the query
+            $query = $this->dbConnection->query($sql);
+
+            if (!$query) {
+                throw new DatabaseException();
+            }
+        } catch (DatabaseExceptionException $e) {
+>>>>>>> Stashed changes
             $message = $e->getDetails();
-            $error = new AccountError();
-            $error->display($message);
+            echo $message;
         }
 
         //if the query succeeded, but no account was found.
@@ -130,6 +146,10 @@ class AccountModel {
         //loop through all rows in the returned accounts
         while ($obj = $query->fetch_object()) {
             $account = new Account(stripslashes($obj->id), stripslashes($obj->client_id), stripslashes($obj->account_number), stripslashes($obj->balance), stripslashes($obj->routing_number), stripslashes($obj->account_type));
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
             //set the id for the account
             $account->setID($obj->id);
 
@@ -201,10 +221,10 @@ class AccountModel {
             }
         } catch (DataMissingException $e) {
             $message = $e->getDetails();
-            $error = new AccountError();
-            $error->display($message);
+            echo $message;
             exit();
         }
+<<<<<<< Updated upstream
 
         // does this user already have both a savings AND a checkings account?
         $client_id = $_SESSION['clientId'];
@@ -274,6 +294,36 @@ class AccountModel {
                 $accountNumbersArray[] = $databaseAccountNumbers;
             }
 
+=======
+        //retrieve data for the new account; data are sanitized and escaped for security.
+        $account_type = $this->dbConnection->real_escape_string(trim(filter_input(INPUT_POST, 'account_type', FILTER_SANITIZE_STRING)));
+
+        while (TRUE) {
+
+            // generate a random account number; account numbers are 9 digits in length
+            $account_number = rand(000000000, 999999999);
+
+            // see if this account number already exists in the database
+            $sql = "SELECT account_number FROM $this->tblAccounts WHERE account_number = '$account_number'";
+
+            try {
+
+                //execute the query
+                $query = $this->dbConnection->query($sql);
+            } catch (DatabaseException $e) {
+                $message = $e->getDetails();
+                echo $message;
+                exit();
+            }
+
+            $accountNumbersArray = array();
+
+            while ($obj = $query->fetch_object()) {
+                $databaseAccountNumbers = stripslashes($obj->account_number);
+                $accountNumbersArray[] = $databaseAccountNumbers;
+            }
+
+>>>>>>> Stashed changes
             // if the account number already exists in the database
             if (in_array($account_number, $accountNumbersArray)) {
                 // generate a new account number and try it all again
@@ -303,8 +353,7 @@ class AccountModel {
             }
         } catch (DatabaseException $e) {
             $message = $e->getDetails();
-            $error = new AccountError();
-            $error->display($message);
+            echo $message;
             exit();
         }
     }

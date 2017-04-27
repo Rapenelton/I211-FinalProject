@@ -6,6 +6,12 @@
  * Description: this class contains two static methods for validating email address and date.
  */
 
+require_once 'exceptions/ssn_exception.class.php';
+require_once 'exceptions/data_missing_exception.class.php';
+require_once 'exceptions/date_exception.class.php';
+require_once 'exceptions/email_exception.class.php';
+require_once 'exceptions/database_exception.class.php';
+
 class Utilities {
     //validate an email address. An valid email address appears in the format of "username@domain.domain"
     public static function checkemail($email) {
@@ -28,7 +34,7 @@ class Utilities {
     public static function validatessn($ssn) {
         $result = TRUE;
         $arrayssn = str_split($ssn);
-        if ($arrayssn.length == 8) {
+        if (sizeof($arrayssn) == 8) {
             return $result;
         } else {
             $result = FALSE;

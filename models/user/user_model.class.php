@@ -10,6 +10,8 @@ session_start();
  * 
  */
 
+require_once 'application/utilities.class.php';
+
 class UserModel {
 
 //private data members
@@ -69,10 +71,10 @@ class UserModel {
             }
         } catch (DatabaseExceptionException $e) {
             $message = $e->getDetails();
-            $error = new UserError();
-            $error->display($message);
+            echo $message;
+            exit();
         }
-        
+
         //if the query succeeded, but no user was found.
         if ($query->num_rows == 0)
             return 0;
@@ -83,7 +85,7 @@ class UserModel {
         //loop through all rows in the returned users
         while ($obj = $query->fetch_object()) {
             $user = new User(stripslashes($obj->client_id), stripslashes($obj->last_name), stripslashes($obj->first_name), stripslashes($obj->birth_date), stripslashes($obj->email), stripslashes($obj->SSN), stripslashes($obj->role), stripslashes($obj->username), stripslashes($obj->password));
-            
+
             //set the id for the user
             $user->setClient_id($obj->client_id);
 
@@ -99,11 +101,11 @@ class UserModel {
      */
 
     public function view_user($id) {
-        
+
         //the select ssql statement
         $sql = "SELECT * FROM " . $this->tblUsers .
                 " WHERE " . $this->tblUsers . ".id='$id'";
-        
+
         //execute the query
         $query = $this->dbConnection->query($sql);
 
@@ -112,17 +114,17 @@ class UserModel {
                 throw new DatabaseException();
             }
         } catch (DatabaseExceptionException $e) {
-            $message = $e->getMessage();
-            $error = new UserError();
-            $error->display($message);
+            $message = $e->getDetails();
+            echo $message;
+            exit();
         }
 
         if ($query && $query->num_rows > 0) {
             $obj = $query->fetch_object();
 
             //create an user object
-            $user = new User(stripslashes($obj->client_id), stripslashes($obj->last_name), stripslashes($obj->first_name), stripslashes($obj->birth_date), stripslashes($obj->email), stripslashes($obj->SSN), stripslashes($obj->role));
-            
+            $user = new User(stripslashes($obj->client_id), stripslashes($obj->last_name), stripslashes($obj->first_name), stripslashes($obj->birth_date), stripslashes($obj->email), stripslashes($obj->SSN), stripslashes($obj->role), stripslashes($obj->username), stripslashes($obj->password));
+
             //set the id for the user
             $user->setClient_id($obj->client_id);
 
@@ -138,7 +140,6 @@ class UserModel {
             $sql = "SELECT * FROM " . $this->tblUsers;
         } else {
             $terms = explode(" ", $terms); //explode multiple terms into an array
-            
             //select statement for AND serach
             $sql = "SELECT * FROM " . $this->tblUsers .
                     " WHERE " . $this->tblUsers . ".client_id AND (1";
@@ -148,7 +149,6 @@ class UserModel {
                 $sql .= " OR last_name  LIKE '%" . $term . "%'";
                 $sql .= " OR email LIKE '%" . $term . "%'";
                 $sql .= " OR SSN LIKE '%" . $term . "%'";
-                $sql .= " OR birth_date  LIKE '%" . $term . "%'";
             }
 
             $sql .= ")";
@@ -163,8 +163,8 @@ class UserModel {
             }
         } catch (DatabaseExceptionException $e) {
             $message = $e->getDetails();
-            $error = new UserError();
-            $error->display($message);
+            echo $message;
+            exit();
         }
         //search succeeded, but no user was found.
         if ($query->num_rows == 0)
@@ -176,7 +176,7 @@ class UserModel {
 
         //loop through all rows in the returned users
         while ($obj = $query->fetch_object()) {
-            $user = new User(stripslashes($obj->client_id), stripslashes($obj->last_name), stripslashes($obj->first_name), stripslashes($obj->birth_date), stripslashes($obj->email), stripslashes($obj->SSN), stripslashes($obj->role));
+            $user = new User(stripslashes($obj->client_id), stripslashes($obj->last_name), stripslashes($obj->first_name), stripslashes($obj->birth_date), stripslashes($obj->email), stripslashes($obj->SSN), stripslashes($obj->role), stripslashes($obj->username), stripslashes($obj->password));
             //set the id for the user
             $user->setClient_id($obj->client_id);
 
@@ -201,8 +201,7 @@ class UserModel {
             }
         } catch (DataMissingException $e) {
             $message = $e->getDetails();
-            $error = new UserError();
-            $error->display($message);
+            echo $message;
         }
 
         //retrieve data for the new account; data are sanitized and escaped for security.
@@ -214,44 +213,80 @@ class UserModel {
         $username = $this->dbConnection->real_escape_string(filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING));
         $password = $this->dbConnection->real_escape_string(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING));
 
-       
+
+        //This is a try throw catch block that handles all possible exceptions
+        try {
+            if ($last_name == "" || $first_name == "" || $birth_date == "" || $email == "") {
+                throw new DataMissingException();
+            }
+            if (!Utilities::validatedate($birth_date)) {
+                throw new DateException();
+            }
+            if (!Utilities::checkemail($email)) {
+                throw new EmailException();
+            }
+            if (!Utilities::validatessn($SSN)) {
+                throw new SsnException();
+            }
+        } catch (DataMissingException $e) {
+            $message = $e->getDetails();
+            echo $message;
+            exit();
+        } catch (DateException $e) {
+            $message = $e->getDetails();
+            echo $message;
+            exit();
+        } catch (EmailException $e) {
+            $message = $e->getDetails();
+            echo $message;
+            exit();
+        } catch (SsnException $e) {
+            $message = $e->getDetails();
+            exit();
+        } catch (Exception $e) {
+            $message = $e->getMessage();
+            echo $message;
+            exit();
+        }
+
+
+
+
+
         // select all usernames from database
         $sql = "SELECT username FROM $this->tblUsers";
-        
+
         try {
-        
-        // execute query
-        $query = $query = $this->dbConnection->query($sql);
-        
-        if(!$query) {
-            throw new DatabaseException();
-        }
-        
-        } catch (DatabaseException $e)  {
+
+            // execute query
+            $query = $this->dbConnection->query($sql);
+
+            if (!$query) {
+                throw new DatabaseException();
+            }
+        } catch (DatabaseException $e) {
             $message = $e->getDetails();
-            $error = new UserError();
-            $error->display($message);
+            echo $message;
         }
-        
+
         // create array to hold results
         $usernameArray = array();
-        
+
         //get all usernames from the database and store them in usernameArray variable
         while ($obj = $query->fetch_object()) {
             $usernamesInDatabase = stripslashes($obj->username);
             $usernameArray[] = $usernamesInDatabase;
         }
-        
+
         // if username already exists in the database, tell the user
-        if(in_array($username, $usernameArray)) {
+        if (in_array($username, $usernameArray)) {
             $message = "This username has already been taken!";
-            $error = new UserError();
-            $error->display($message);
+            echo $message;
             exit();
         }
-        
-        
-        
+
+
+
         // assuming '2' is considered a normal 'user' account.
         $role = 2;
 
@@ -267,8 +302,7 @@ class UserModel {
             }
         } catch (DatabaseException $e) {
             $message = $e->getDetails();
-            $error = new UserError();
-            $error->display($message);
+            echo $message;
         }
     }
 
@@ -282,8 +316,7 @@ class UserModel {
             }
         } catch (DataMissingException $e) {
             $message = $e->getDetails();
-            $error = new UserError();
-            $error->display($message);
+            echo $message;
             exit();
         }
 
@@ -292,20 +325,26 @@ class UserModel {
         $password = $this->dbConnection->real_escape_string(trim(filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING)));
 
         try {
-        
-        //select all 'usernames' that currently exist in the database
-        $sql = "SELECT username FROM $this->tblUsers";
 
-        //execute the query
-        $query = $this->dbConnection->query($sql);
+            //select all 'usernames' that currently exist in the database
+            $sql = "SELECT username FROM $this->tblUsers";
 
-        if (!$query) {
-            throw new DatabaseException();
-        }
-        } catch (DatabaseException $e)  {
-            $error = new UserError();
+            //execute the query
+            $query = $this->dbConnection->query($sql);
+
+            if (!$query) {
+                throw new DatabaseException();
+            }
+            if ($username == "" || $password == "") {
+                throw new DataMissingException();
+            }
+        } catch (DatabaseException $e) {
             $message = $e->getDetails();
-            $error->display($message);
+            echo $message;
+            exit();
+        } catch (DataMissingException $e) {
+            $message = $e->getDetails();
+            echo $message;
             exit();
         }
         //create array to hold all of the usernames from the above query
@@ -324,18 +363,16 @@ class UserModel {
             $sql = "SELECT password FROM $this->tblUsers WHERE username = '$username'";
 
             try {
-            
-            //execute the query
-            $query = $this->dbConnection->query($sql);
 
-            if (!$query) {
-                throw new DatabaseException();
-            }
-            
-            } catch (DatabaseException $e)  {
+                //execute the query
+                $query = $this->dbConnection->query($sql);
+
+                if (!$query) {
+                    throw new DatabaseException();
+                }
+            } catch (DatabaseException $e) {
                 $message = $e->getDetails();
-                $error = new UserError();
-                $error->display($message);
+                echo $message;
                 exit();
             }
             //will hold the password found in the database
@@ -346,58 +383,56 @@ class UserModel {
                 $databasePassword = stripslashes($obj->password);
                 $databasePasswords[] = $databasePassword;
             }
-            
+
             // get user role, admin? normal user?
             $role = array();
-            
+
             // sql statement to find the user role
             $sql = "SELECT role FROM $this->tblUsers WHERE username = '$username' AND password = '$password'";
-            
+
             //execute the query
             $query = $this->dbConnection->query($sql);
-            
+
             while ($obj = $query->fetch_object()) {
                 $role = stripslashes($obj->role);
             }
-            
-            if($role == 1)  {
+
+            if ($role == 1) {
                 $role = "admin";
-            }   else    {
+            } else {
                 $role = "normal";
             }
-            
+
             //get the users id number
             $sql = "SELECT client_id FROM $this->tblUsers WHERE username = '$username'";
-            
+
             try {
-            
-            //execute the query
-            $query = $this->dbConnection->query($sql);
-            
-            
-            if(!$query) {
-                throw new DatabaseException();
-            }
-            
-            } catch(DatabaseException $e)   {
+
+                //execute the query
+                $query = $this->dbConnection->query($sql);
+
+
+                if (!$query) {
+                    throw new DatabaseException();
+                }
+            } catch (DatabaseException $e) {
                 $message = $e->getMessage();
-                $error = new UserError();
-                $error->display($message);
+                echo $message;
             }
-            
+
             $client_id = array();
-            
+
             while ($obj = $query->fetch_object()) {
                 $client_id = stripslashes($obj->client_id);
             }
-            
+
             //both the form username and password exist in the database
             if (in_array($password, $databasePasswords)) {
 
                 $_SESSION['username'] = $username;
                 $_SESSION['isLoggedIn'] = true;
                 $_SESSION['role'] = $role;
-                $_SESSION['clientId'] = (int)$client_id;
+                $_SESSION['clientId'] = (int) $client_id;
                 return true;
             }
         }
@@ -405,6 +440,9 @@ class UserModel {
         else {
             return false;
         }
-    }//end login
+    }
 
-}// end class
+//end login
+}
+
+// end class
