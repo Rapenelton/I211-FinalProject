@@ -121,9 +121,12 @@ class AccountModel {
         }
 
         //if the query succeeded, but no account was found.
-        if ($query->num_rows == 0)
-            return 0;
-
+        if ($query->num_rows == 0) {
+            $message = "You don't have any registered Accounts!";
+            $error = new AccountError();
+            $error->display($message);
+            exit();
+        }
         //create an array to store all returned albums
         $accounts = array();
 
@@ -212,6 +215,9 @@ class AccountModel {
         //create sql statement to see how many accounts are already opened up.
         $sql = "SELECT account_type FROM $this->tblAccounts WHERE client_id = '$client_id'";
 
+        //retrieve data for the new account; data are sanitized and escaped for security.
+        $account_type = $this->dbConnection->real_escape_string(trim(filter_input(INPUT_POST, 'account_type', FILTER_SANITIZE_STRING)));
+
         try {
             //execute query
             $query = $this->dbConnection->query($sql);
@@ -235,18 +241,14 @@ class AccountModel {
         // if a user has a checkings account
         if (in_array("checkings", $accountTypesArray)) {
 
-            // if a user also has a savings account
-            if (in_array("savings", $accountTypesArray)) {
-
+            if ($account_type == "checkings") {
+                $message = "You already have a Checkings account!";
                 $error = new AccountError();
-                $message = "You already have both a Savings and a Checkings Account!";
                 $error->display($message);
                 exit();
             }
-        }
 
-        //retrieve data for the new account; data are sanitized and escaped for security.
-        $account_type = $this->dbConnection->real_escape_string(trim(filter_input(INPUT_POST, 'account_type', FILTER_SANITIZE_STRING)));
+        }
 
         while (TRUE) {
 
