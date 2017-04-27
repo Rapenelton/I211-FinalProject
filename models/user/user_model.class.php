@@ -353,8 +353,28 @@ class UserModel {
             // sql statement to find the user role
             $sql = "SELECT role FROM $this->tblUsers WHERE username = '$username' AND password = '$password'";
             
+            try {
+            
             //execute the query
             $query = $this->dbConnection->query($sql);
+            
+            if(!$query) {
+                throw new DatabaseException();
+            }
+            
+            } catch(DatabaseException $e)   {
+                $message = $e->getDetails();
+                $error = new UserError();
+                $error->display($message);
+                exit();
+            }
+            
+            if($query->num_rows == 0)    {
+                $message = "Incorrect password for this user.";
+                $error = new UserError();
+                $error->display($message);
+                exit();
+            }
             
             while ($obj = $query->fetch_object()) {
                 $role = stripslashes($obj->role);

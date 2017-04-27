@@ -13,4 +13,10 @@ class WelcomeController {
         $view = new WelcomeIndex();
         $view->display();
     }
+    
+    public function about() {
+        $view = new WelcomeAbout();
+        $view->display();
+    }
+    
 }

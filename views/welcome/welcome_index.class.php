@@ -40,7 +40,7 @@ class WelcomeIndex extends IndexView {
                             ?>
                             <li><a href="<?= BASE_URL ?>/user/register">Register</a></li>
                             <li><a href="<?= BASE_URL ?>/user/login">Login</a></li>
-                            <li><a href ="about.html">About Us</a></li>
+                            <li><a href ="<?= BASE_URL ?>/welcome/about">About Us</a></li>
 
                             <?php
                         }
