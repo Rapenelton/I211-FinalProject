@@ -37,13 +37,13 @@ class AccountController {
     }
 
     //show details of an account
-    public function detail($id) {
+    public function detail() {
         //retrieve the specific account
-        $account = $this->account_model->view_account($id);
+        $account = $this->account_model->view_account($_SESSION['clientId']);
 
         if (!$account) {
             //display an error
-            $message = "There was a problem displaying the account id='" . $id . "'.";
+            $message = "There was a problem displaying the the account.";
             $this->error($message);
             return;
         }

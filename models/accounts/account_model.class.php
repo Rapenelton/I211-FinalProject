@@ -67,9 +67,10 @@ class AccountModel {
             if (!$query) {
                 throw new DatabaseException();
             }
-        } catch (DatabaseExceptionException $e) {
+        } catch (DatabaseException $e) {
             $message = $e->getDetails();
-            echo $message;
+            $error = new AccountError();
+            $error->display($message);
         }
 //if the query succeeded, but no account was found.
         if ($query->num_rows == 0)
@@ -96,38 +97,46 @@ class AccountModel {
      * and returns an account object. Return false if failed.
      */
 
-    public function view_account($id) {
-        //the select sql statement
-        $sql = "SELECT * FROM " . $this->tblAccounts . " WHERE client_id = '$id'";
-        
-        try {
-            
+    public function view_account() {
+        /* construct the sql SELECT statement in this format
+         * SELECT ...
+         * FROM ...
+         * WHERE ...
+         */
+        $client_id = $_SESSION['clientId'];
+        $sql = "SELECT * FROM " . $this->tblAccounts . " WHERE client_id ='$client_id'";
+
         //execute the query
         $query = $this->dbConnection->query($sql);
-            
+
+        // if the query failed, return false. 
+        try {
             if (!$query) {
                 throw new DatabaseException();
             }
-            
-        } catch (DatabaseExceptionException $e) {
+        } catch (DatabaseException $e) {
             $message = $e->getDetails();
             $error = new AccountError();
             $error->display($message);
         }
 
-        if ($query && $query->num_rows > 0) {
-            $obj = $query->fetch_object();
+        //if the query succeeded, but no account was found.
+        if ($query->num_rows == 0)
+            return 0;
 
-            //create an account object
+        //create an array to store all returned albums
+        $accounts = array();
+
+        //loop through all rows in the returned accounts
+        while ($obj = $query->fetch_object()) {
             $account = new Account(stripslashes($obj->id), stripslashes($obj->client_id), stripslashes($obj->account_number), stripslashes($obj->balance), stripslashes($obj->routing_number), stripslashes($obj->account_type));
-            
             //set the id for the account
-            $account->setId($obj->id);
+            $account->setID($obj->id);
 
-            return $account;
+            //add the account into the array
+            $accounts[] = $account;
         }
-
-        return false;
+        return $accounts;
     }
 
 //search the database for accounts that match words in titles. Return an array of accounts if succeed; false otherwise.
@@ -155,9 +164,11 @@ class AccountModel {
             if (!$query) {
                 throw new DatabaseException();
             }
-        } catch (DatabaseExceptionException $e) {
+        } catch (DatabaseException $e) {
             $message = $e->getDetails();
-            echo $message;
+            $error = new AccountError();
+            $error->display($message);
+            exit();
         }
 //search succeeded, but no account was found.
         if ($query->num_rows == 0)
@@ -194,62 +205,99 @@ class AccountModel {
             $error->display($message);
             exit();
         }
-        //retrieve data for the new account; data are sanitized and escaped for security.
-        $account_type = $this->dbConnection->real_escape_string(trim(filter_input(INPUT_POST, 'account_type', FILTER_SANITIZE_STRING)));
-        
-        while (TRUE)  {
-        
-        // generate a random account number; account numbers are 9 digits in length
-        $account_number = rand(000000000, 999999999);
-        
-        // see if this account number already exists in the database
-        $sql = "SELECT account_number FROM $this->tblAccounts WHERE account_number = '$account_number'";
-        
+
+        // does this user already have both a savings AND a checkings account?
+        $client_id = $_SESSION['clientId'];
+
+        //create sql statement to see how many accounts are already opened up.
+        $sql = "SELECT account_type FROM $this->tblAccounts WHERE client_id = '$client_id'";
+
         try {
-        
-        //execute the query
-        $query = $this->dbConnection->query($sql);
-        
-        } catch(DatabaseException $e)   {
+            //execute query
+            $query = $this->dbConnection->query($sql);
+
+            if (!$query) {
+                throw new DatabaseException();
+            }
+        } catch (DatabaseException $e) {
             $message = $e->getDetails();
             $error = new AccountError();
             $error->display($message);
-            exit();
         }
-        
-        $accountNumbersArray = array();
-        
-         while ($obj = $query->fetch_object()) {
+
+        $accountTypesArray = array();
+
+        while ($obj = $query->fetch_object()) {
+            $databaseAccountTypes = stripslashes($obj->account_type);
+            $accountTypesArray[] = $databaseAccountTypes;
+        }
+
+        // if a user has a checkings account
+        if (in_array("checkings", $accountTypesArray)) {
+
+            // if a user also has a savings account
+            if (in_array("savings", $accountTypesArray)) {
+
+                $error = new AccountError();
+                $message = "You already have both a Savings and a Checkings Account!";
+                $error->display($message);
+                exit();
+            }
+        }
+
+        //retrieve data for the new account; data are sanitized and escaped for security.
+        $account_type = $this->dbConnection->real_escape_string(trim(filter_input(INPUT_POST, 'account_type', FILTER_SANITIZE_STRING)));
+
+        while (TRUE) {
+
+            // generate a random account number; account numbers are 9 digits in length
+            $account_number = rand(000000000, 999999999);
+
+            // see if this account number already exists in the database
+            $sql = "SELECT account_number FROM $this->tblAccounts WHERE account_number = '$account_number'";
+
+            try {
+
+                //execute the query
+                $query = $this->dbConnection->query($sql);
+            } catch (DatabaseException $e) {
+                $message = $e->getDetails();
+                $error = new AccountError();
+                $error->display($message);
+                exit();
+            }
+
+            $accountNumbersArray = array();
+
+            while ($obj = $query->fetch_object()) {
                 $databaseAccountNumbers = stripslashes($obj->account_number);
                 $accountNumbersArray[] = $databaseAccountNumbers;
-        }
-        
-        // if the account number already exists in the database
-        if(in_array($account_number, $accountNumbersArray))     {
-            // generate a new account number and try it all again
-            continue;
-        }   else    {
-            // move on with the code
-            break;
-        }
+            }
 
+            // if the account number already exists in the database
+            if (in_array($account_number, $accountNumbersArray)) {
+                // generate a new account number and try it all again
+                continue;
+            } else {
+                // move on with the code
+                break;
+            }
         }// end while
-
         // default values for stuff
         $balance = 0;
         $routing_number = 0;
-        
+
         $client_id = $_SESSION['clientId'];
-        
+
         //query string for update   
         $sql = "INSERT INTO $this->tblAccounts (client_id, account_number, balance, routing_number, account_type) VALUES ($client_id, $account_number, $balance, $routing_number, '$account_type')";
-        
-        try {
-        
-        //execute the query
-        $query = $this->dbConnection->query($sql);
 
-        
+        try {
+
+            //execute the query
+            $query = $this->dbConnection->query($sql);
+
+
             if (!$query) {
                 throw new DatabaseException();
             }

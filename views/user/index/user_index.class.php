@@ -64,7 +64,7 @@ class UserIndex extends UserIndexView {
             }
             ?>  
 
-            <a href="../../index/">Back to Home</a>
+            <a href="<?= BASE_URL ?>/index">Back to Home</a>
 
         </div>
 
