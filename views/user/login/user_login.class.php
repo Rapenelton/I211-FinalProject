@@ -24,7 +24,7 @@ class UserLogin extends UserIndexView {
 
             <h3>Login</h3>
 
-            Username: <input type="text" name="username" required><br>
+            Username: <input type="text" name="username" ><br>
             Password: <input type="text" name="password" required><br>
 
             <br>
