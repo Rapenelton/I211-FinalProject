@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Author: Raleigh Stelle
  * Date: 4/5/2017
@@ -29,18 +28,18 @@ class AccountDetail extends AccountIndexView {
 
 
                 echo "<div class='col'><p><span>Account Number: " . $accountNumber . "<br>Balance: " . $balance . "<br>Routing Number: " . $routingNumber . "<br>Account Type: " . $accountType . "</span></p></div>";
-?>
+                ?>
                 <?php
-
                 if ($i % 6 == 5 || $i == count($accounts) - 1) {
                     echo "</div>";
                 }
             }
         }
+        ?>
 
+        <a href="<?= BASE_URL ?>/index">Back to Home</a>
 
-
-
+        <?php
         parent::displayFooter();
     }
 
