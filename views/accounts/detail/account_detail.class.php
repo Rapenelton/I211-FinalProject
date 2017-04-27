@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Author: Raleigh Stelle
  * Date: 4/5/2017
@@ -6,38 +7,41 @@
  * Description: This class defines a method "display".
  *              The method accepts a Account object and displays the details of the account in a table.
  */
+
 //Account detail view class
 class AccountDetail extends AccountIndexView {
 
-    public function display($account, $confirm = "") {
-        //display page header
+    public function display($accounts) {
+//display page header
         parent::displayHeader("Account Details");
+        if ($accounts === 0) {
+            echo "No account was found.<br><br><br><br><br>";
+        } else {
+            //display accounts in a grid; six accounts per row
+            foreach ($accounts as $i => $account) {
+                $accountNumber = $account->getAccount_number();
+                $balance = $account->getBalance();
+                $routingNumber = $account->getRouting_number();
+                $accountType = $account->getAccount_type();
+                if ($i % 6 == 0) {
+                    echo "<div class='row'>";
+                }
 
-        //retrieve account details by calling get methods
-        $account_number = $account->getAccount_number();
-        $balance = $account->getBalance();
-        $routing_number = $account->getRouting_number();
-        //$image = $account->getImage();
-        $account_type = $account->getAccount_type();
 
-        //if (strpos($image, "http://") === false AND strpos($image, "https://") === false) {
-        //$image = BASE_URL . '/' . BOOK_IMG . $image;
-        //}
-        ?>
-        <!-- display account details in a table -->
-        <br>
-        <strong>Account Number: </strong> <?= $account_number ?> <br>
-        <strong>Balance: </strong> <?= $balance ?> <br>
-        <strong>Routing Number: </strong> <?= $routing_number ?> <br>
-        <strong>Account Type: </strong> <?= $account_type ?> <br>
-        
-        <br><br>
-        <a href="<?= BASE_URL ?>../index">Back to Home</a>
+                echo "<div class='col'><p><span>Account Number: " . $accountNumber . "<br>Balance: " . $balance . "<br>Routing Number: " . $routingNumber . "<br>Account Type: " . $accountType . "</span></p></div>";
+?>
+                <?php
 
-        <?php
-        //display page footer
+                if ($i % 6 == 5 || $i == count($accounts) - 1) {
+                    echo "</div>";
+                }
+            }
+        }
+
+
+
+
         parent::displayFooter();
     }
 
-//end of display method
 }
