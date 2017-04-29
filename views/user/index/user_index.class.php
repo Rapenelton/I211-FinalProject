@@ -29,7 +29,7 @@ class UserIndex extends UserIndexView {
         
         <div id="searchbar">
             <form method="get" action="<?= BASE_URL ?>/user/search">
-                <input type="text" name="query-terms" id="searchtextbox" placeholder="Search by keyword" autocomplete="off" onkeyup="handleKeyUp(event)">
+                <input type="text" name="query-terms" id="searchtextbox" placeholder="Search by keyword" autocomplete="on" onkeyup="handleKeyUp(event)">
                 <input type="submit" value="Go"/>
             </form>
             <div id="suggestionDiv"></div>

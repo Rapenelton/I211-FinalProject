@@ -8,6 +8,7 @@
  * 
  */
 
+require_once 'application/utilities.class.php';
 class Database {
 
     //define database parameters
@@ -35,11 +36,11 @@ class Database {
         );
             if (mysqli_connect_errno() != 0) {
                 $errmsg = "Connecting database failed: " . mysqli_connect_error();
-                throw new DatabaseException($errmsg);
+                throw new DatabaseException();
             }
         } catch (DatabaseException $e) {
-            $error = new Error();
-            $error->display($e->getMessage());
+            $message = $e->getDetails();
+            echo $message;
             exit;
         }
     }

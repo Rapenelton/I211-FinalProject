@@ -13,7 +13,7 @@ class AccountIndexView extends IndexView {
         ?>
         <script>
             //the media type
-            var media = "account";
+            var type = "account";
         </script>
 
         <?php

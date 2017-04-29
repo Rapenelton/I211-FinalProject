@@ -21,13 +21,13 @@ class AccountIndex extends AccountIndexView {
 
         <script>
         //the media type
-            var media = "account";
+            var type = "account";
         </script>
         <!--create the search bar -->
 
         <div id="searchbar">
             <form method="get" action="<?= BASE_URL ?>/account/search/">
-                <input type="text" name="query-terms" id="searchtextbox" placeholder="Search by account #" autocomplete="off">
+                <input type="text" name="query-terms" id="searchtextbox" placeholder="Search by account #" autocomplete="off" onkeyup="handleKeyUp(event)">
                 <input type="submit" value="Go"/>
             </form>
 

@@ -13,7 +13,7 @@ class UserIndexView extends IndexView {
         ?>
         <script>
             //the media type
-            var media = "user";
+            var type = "user";
         </script>
         <!--create the search bar -->
         <!--

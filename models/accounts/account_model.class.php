@@ -10,6 +10,8 @@
 
 session_start();
 
+require_once 'application/utilities.class.php';
+
 class AccountModel {
 
 //private data members
@@ -247,7 +249,6 @@ class AccountModel {
                 $error->display($message);
                 exit();
             }
-
         }
 
         while (TRUE) {
